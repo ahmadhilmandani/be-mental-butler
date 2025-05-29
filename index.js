@@ -7,6 +7,8 @@ require('dotenv').config()
 
 const authRoute = require('./src/routes/authRoutes')
 const { log } = require('./src/middleware/log')
+const { errorHanlder } = require('./src/middleware/errorHanlder')
+
 
 const corsOptions = {
   origin: "http://localhost:5173"
@@ -18,8 +20,8 @@ app.use(express.urlencoded({ extended: true }))
 
 
 app.use(log)
-
 app.use('/api/auth', authRoute)
+app.use(errorHanlder)
 
 
 app.listen(port, () => {

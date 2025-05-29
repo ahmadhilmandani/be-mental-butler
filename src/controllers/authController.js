@@ -31,22 +31,21 @@ const login = async (req, res, next) => {
 
     const getUser = await getUserByEmailOrUsername(email, username, password)
 
-    const token = jwt.sign({ id: getUser[0].id_user }, "PASSWORD", { expiresIn: 86400 })
+    const result = {
+      username: getUser[0].username,
+      name: getUser[0].name,
+      email: getUser[0].email
+    }
+
+    const token = jwt.sign({ user: result }, "PASSWORD", { expiresIn: 86400 })
 
     if (getUser) {
-      const result = {
-        username: getUser[0].username,
-        name: getUser[0].name,
-        email: getUser[0].email,
-        token: token
-      }
-
+      result['token'] = token
       return res.status(200).send({ 'data': result })
     }
 
   } catch (error) {
     await connection.rollback()
-    console.log(error)
     next(error)
   }
 }
