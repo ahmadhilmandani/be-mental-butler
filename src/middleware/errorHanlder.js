@@ -1,4 +1,4 @@
-const errorHanlder = (err, res, req, next) => {
+const errorHanlder = (err, req, res, next) => {
   const errStatus = err.status || 500
 
   return res.status(errStatus).send(
