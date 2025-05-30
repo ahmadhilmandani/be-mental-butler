@@ -1,5 +1,5 @@
 const connectDb = require('../config/db')
-const { insertJournalRepo, getAllUserJournalRepo } = require('../repositories/journalRepository')
+const { insertJournalRepo, getAllUserJournalRepo, getJournalByIdRepo } = require('../repositories/journalRepository')
 
 
 const insertJournalController = async (req, res, next) => {
@@ -42,6 +42,12 @@ const getAllJournalController = async (req, res, next) => {
 
 const getJournalByIdController = async (req, res, next) => {
   try {
+    const { userId, journalId } = req.params
+    const result = await getJournalByIdRepo(userId, journalId)
+
+    return res.status(200).send({
+      'data': result
+    })
 
   } catch (error) {
     next(error)
