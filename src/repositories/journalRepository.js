@@ -2,6 +2,8 @@ const connectDb = require('../config/db')
 
 const insertJournalRepo = async (user_id, title, body) => {
   const connection = await connectDb()
+  const currentDatetime = new Date()
+
 
   try {
     const sql_statement = `
@@ -10,17 +12,19 @@ const insertJournalRepo = async (user_id, title, body) => {
         (
           user_id,
           title,
-          body
+          body,
+          created_at
         )
       VALUES
         (
+          ?,
           ?,
           ?,
           ?
         )
     `
 
-    const [result] = await connection.execute(sql_statement, [user_id, title, body])
+    const [result] = await connection.execute(sql_statement, [user_id, title, body, currentDatetime])
     return result
 
   } catch (error) {
@@ -55,7 +59,7 @@ const getAllUserJournalRepo = async (userId) => {
 }
 
 const getJournalByIdRepo = async (userId, journalId) => {
-  const connection = connectDb()
+  const connection = await connectDb()
 
   try {
     const sql_statement = `

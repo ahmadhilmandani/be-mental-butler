@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 
 const registerRepositories = async (username, name, email, password) => {
   const connection = await connectDb()
+  const currentDatetime = new Date()
 
   try {
     const saltRounds = 10
@@ -14,10 +15,12 @@ const registerRepositories = async (username, name, email, password) => {
           username,
           name, 
           email, 
-          password
+          password,
+          created_at
         )
       VALUES
         (
+          ?,
           ?,
           ?,
           ?,
@@ -28,7 +31,7 @@ const registerRepositories = async (username, name, email, password) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds)
 
     if (hashedPassword) {
-      const [result] = await connection.execute(sql_statement, [username, name, email, hashedPassword])
+      const [result] = await connection.execute(sql_statement, [username, name, email, hashedPassword, currentDatetime])
 
       return result
     }
@@ -37,7 +40,6 @@ const registerRepositories = async (username, name, email, password) => {
     throw new Error(error)
   }
 }
-
 
 const getUserByEmailOrUsername = async (email, username, password) => {
   const connection = await connectDb()
@@ -56,6 +58,10 @@ const getUserByEmailOrUsername = async (email, username, password) => {
     `
 
     const [result] = await connection.execute(sql_statement, [email, username])
+
+    if (result.length == 0) {
+      return []
+    }
 
     const match = await bcrypt.compare(password, result[0].password);
 

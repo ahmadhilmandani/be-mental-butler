@@ -31,6 +31,13 @@ const login = async (req, res, next) => {
 
     const getUser = await getUserByEmailOrUsername(email, username, password)
 
+    if (getUser.length == 0) {
+      return res.status(404).send({
+        'is_error': true,
+        'msg': 'Email atau Password Salah'
+      })
+    }
+
     const result = {
       username: getUser[0].username,
       name: getUser[0].name,
