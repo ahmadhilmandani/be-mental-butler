@@ -41,7 +41,7 @@ const registerRepositories = async (username, name, email, password) => {
   }
 }
 
-const getUserByEmailOrUsername = async (email, username, password) => {
+const getUserByEmailOrUsername = async (emailOrUsername, password) => {
   const connection = await connectDb()
 
   try {
@@ -57,7 +57,7 @@ const getUserByEmailOrUsername = async (email, username, password) => {
       LIMIT 1
     `
 
-    const [result] = await connection.execute(sql_statement, [email, username])
+    const [result] = await connection.execute(sql_statement, [emailOrUsername, emailOrUsername])
 
     if (result.length == 0) {
       return []

@@ -27,9 +27,9 @@ const login = async (req, res, next) => {
   const connection = await connectDb();
 
   try {
-    const { email, username, password } = req.body
+    const { email_or_username, password } = req.body
 
-    const getUser = await getUserByEmailOrUsername(email, username, password)
+    const getUser = await getUserByEmailOrUsername(email_or_username, password)
 
     if (getUser.length == 0) {
       return res.status(404).send({
